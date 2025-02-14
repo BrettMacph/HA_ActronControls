@@ -1,0 +1,116 @@
+sequence:
+  - alias: Check if Fan Only Active, if so turn off
+    if:
+      - condition: state
+        entity_id: sensor.ac_northstatus
+        state: Fan Only
+    then:
+      - action: script.ac_northbuttonpress
+        metadata: {}
+        data:
+          button: Power
+        target:
+          entity_id: script.ac_northbuttonpress
+        enabled: true
+        alias: Turn Off Fan
+      - delay:
+          hours: 0
+          minutes: 0
+          seconds: 3
+          milliseconds: 0
+  - alias: "Check if AC is off, if so turn on "
+    if:
+      - condition: state
+        entity_id: sensor.ac_northstatus
+        state: "off"
+    then:
+      - parallel:
+          - action: script.ac_northbuttonpress
+            metadata: {}
+            data:
+              button: Power
+            target:
+              entity_id: script.ac_northbuttonpress
+            enabled: true
+            alias: Turn On AC
+          - wait_for_trigger:
+              - trigger: state
+                entity_id:
+                  - sensor.ac_northstatus
+                from: "off"
+            timeout:
+              hours: 0
+              minutes: 0
+              seconds: 20
+              milliseconds: 0
+  - alias: Check in Requested Mode
+    repeat:
+      sequence:
+        - alias: Press Mode Button
+          action: script.ac_northbuttonpress
+          metadata: {}
+          data:
+            button: Mode
+          target:
+            entity_id: script.ac_northbuttonpress
+          enabled: true
+        - delay:
+            hours: 0
+            minutes: 0
+            seconds: 2
+            milliseconds: 0
+      while:
+        - condition: not
+          conditions:
+            - condition: or
+              conditions:
+                - condition: and
+                  conditions:
+                    - condition: state
+                      entity_id: climate.aircon_north
+                      state: cool
+                    - condition: state
+                      entity_id: sensor.ac_northstatus
+                      state: Cool
+                  alias: Check in cool state
+                - alias: Check in heat state
+                  condition: and
+                  conditions:
+                    - condition: state
+                      entity_id: climate.aircon_north
+                      state: heat
+                    - condition: state
+                      entity_id: sensor.ac_northstatus
+                      state: Heat
+  - alias: Set Temperature Setpoint
+    choose:
+      - conditions:
+          - condition: state
+            entity_id: climate.aircon_north
+            state: cool
+        sequence:
+          - alias: Press Temp Down Long
+            action: script.ac_northbuttonpress
+            metadata: {}
+            data:
+              button: Temp Down Long
+            target:
+              entity_id: script.ac_northbuttonpress
+            enabled: true
+        alias: Check/Adjust Cool Temperature Setpoint
+      - conditions:
+          - condition: state
+            entity_id: climate.aircon_north
+            state: heat
+        sequence:
+          - alias: Press Temp Up Long
+            action: script.ac_northbuttonpress
+            metadata: {}
+            data:
+              button: Temp Up Long
+            target:
+              entity_id: script.ac_northbuttonpress
+            enabled: true
+        alias: Check/Adjust Heat Temperature Setpoint
+alias: AC_NorthPowerOn
+description: ""
