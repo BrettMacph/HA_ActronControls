@@ -1,0 +1,11 @@
+{% if is_state('binary_Sensor.esphome_web_cc72e4_auto','on') %}
+Auto
+{% elif is_state('binary_Sensor.esphome_web_cc72e4_cool','on') %}
+Cool
+{% elif is_state('binary_Sensor.esphome_web_cc72e4_heat','on') %}
+Heat
+{% elif not is_state('sensor.ac_northfanstatus','off') %}
+Fan Only
+{% else %}
+off
+{% endif %}
