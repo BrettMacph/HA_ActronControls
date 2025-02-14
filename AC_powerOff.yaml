@@ -1,0 +1,19 @@
+sequence:
+  - alias: Check if running, then press power
+    if:
+      - condition: not
+        conditions:
+          - condition: state
+            entity_id: sensor.ac_northstatus
+            state: "off"
+    then:
+      - alias: Press Power Button
+        action: script.ac_northbuttonpress
+        metadata: {}
+        data:
+          button: Power
+        target:
+          entity_id: script.ac_northbuttonpress
+        enabled: true
+alias: AC_NorthPowerOff
+description: ""
