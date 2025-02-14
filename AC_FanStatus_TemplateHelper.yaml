@@ -1,0 +1,12 @@
+{% if is_state('binary_sensor.esphome_web_cc72e4_fan_continuos','on') %}
+Cont
+{% endif %}
+{% if is_state('binary_sensor.esphome_web_cc72e4_fan_low','on') %}
+Low
+{% elif is_state('binary_sensor.esphome_web_cc72e4_fan_mid','on') %}
+Mid
+{% elif is_state('binary_sensor.esphome_web_cc72e4_fan_hi','on') %}
+High
+{% else %}
+off
+{% endif %}
