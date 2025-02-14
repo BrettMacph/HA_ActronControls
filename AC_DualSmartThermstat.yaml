@@ -1,0 +1,16 @@
+climate:
+  - platform: dual_smart_thermostat
+    name: AirCon_North
+    unique_id: AirCon_North
+    heater: input_boolean.ac_north_heat
+    cooler: input_boolean.ac_north_cool
+    target_sensor: sensor.ac_north_temperature
+    initial_hvac_mode: "off"
+    min_temp: 20
+    max_temp: 30
+    min_cycle_duration:
+      seconds: 15
+    cold_tolerance: 0.2
+    hot_tolerance: 0.2
+    precision: 0.1
+    target_temp_step: 0.5
