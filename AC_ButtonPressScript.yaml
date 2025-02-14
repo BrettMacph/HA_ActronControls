@@ -1,0 +1,151 @@
+sequence:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Zone Master Bed'}}"
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 820
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Zone Office'}}"
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 720
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Zone Guest Bed'}}"
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 770
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Fan'}}"
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 867
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Temp Down'}}"
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 900
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Temp Down Long'}}"
+          - condition: numeric_state
+            entity_id: sensor.esphome_web_cc72e4_setpoint_temperature
+            above: 22
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 900
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+          - wait_for_trigger:
+              - trigger: numeric_state
+                entity_id:
+                  - sensor.esphome_web_cc72e4_setpoint_temperature
+                below: 22.5
+            timeout:
+              hours: 0
+              minutes: 0
+              seconds: 20
+              milliseconds: 0
+        alias: Temp Down Long
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Temp Up'}}"
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 1075
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Temp Up Long'}}"
+          - condition: numeric_state
+            entity_id: sensor.esphome_web_cc72e4_setpoint_temperature
+            below: 27
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 1075
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+          - wait_for_trigger:
+              - trigger: numeric_state
+                entity_id:
+                  - sensor.esphome_web_cc72e4_setpoint_temperature
+                above: 27.5
+            timeout:
+              hours: 0
+              minutes: 0
+              seconds: 20
+              milliseconds: 0
+        alias: Temp Up Long
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Mode'}}"
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 1205
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+      - conditions:
+          - condition: template
+            value_template: "{{ button == 'Power'}}"
+        sequence:
+          - action: number.set_value
+            metadata: {}
+            data:
+              value: 1320
+            target:
+              entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 700
+  - action: number.set_value
+    metadata: {}
+    data:
+      value: 0
+    target:
+      entity_id: number.esphome_web_cc72e4_dac_output_milivolts
+fields:
+  button:
+    selector:
+      text: null
+    name: Button
+    description: DAC
+    default: none
+    required: true
+alias: AC_NorthButtonPress
+description: ""
