@@ -1,0 +1,40 @@
+{% set office = states('sensor.temp_office_ht_temperature') | float %}
+{% set livingroom = states('sensor.temp_livingroom_temperature') | float %}
+{% set guestbed = states('sensor.temp_guestbed_temperature') | float %}
+{% set mainbed = states('sensor.temp_masterbed_temperature') | float %}
+{% set finalTemp = 10.0 | float %}
+{% set acstate = states('climate.aircon_north') %}
+{% set zoneOffice = states('binary_sensor.esphome_web_cc72e4_zone_office') %}
+{% set zoneMasterBed = states('binary_sensor.esphome_web_cc72e4_zone_master_bed') %}
+{% set zoneGuestBed = states('binary_sensor.esphome_web_cc72e4_zone_guest_bed') %}
+{% set zoneLivingRoom = states('input_boolean.ac_northzonelivingroom') %}
+
+{% if acstate=='heat' %}
+	{% set finalTemp = 50.0 | float %}
+	{% if zoneLivingRoom=='on' and livingroom < finalTemp  %}
+	  {% set finalTemp = livingroom %}
+	{% endif %}
+	{% if zoneOffice=='on' and office < finalTemp %}
+	  {% set finalTemp = office %}
+	{% endif %}
+	{% if zoneMasterBed=='on' and mainbed < finalTemp %}
+	  {% set finalTemp = mainbed %}
+	{% endif %}
+	{% if zoneGuestBed=='on' and guestbed < finalTemp %}
+	  {% set finalTemp = guestbed %}
+	{% endif %}
+{% else %}
+	{% if zoneLivingRoom=='on' and livingroom > finalTemp  %}
+	  {% set finalTemp = livingroom %}
+	{% endif %}
+	{% if zoneOffice=='on' and office > finalTemp %}
+	  {% set finalTemp = office %}
+	{% endif %}
+	{% if zoneMasterBed=='on' and mainbed > finalTemp %}
+	  {% set finalTemp = mainbed %}
+	{% endif %}
+	{% if zoneGuestBed=='on' and guestbed > finalTemp %}
+	  {% set finalTemp = guestbed %}
+	{% endif %}
+{% endif %}
+{{finalTemp}}
